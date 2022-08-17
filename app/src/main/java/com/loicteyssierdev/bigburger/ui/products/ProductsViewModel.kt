@@ -3,7 +3,11 @@ package com.loicteyssierdev.bigburger.ui.products
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.loicteyssierdev.bigburger.api.ApiInstance
 import com.loicteyssierdev.bigburger.model.Product
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ProductsViewModel : ViewModel() {
 
@@ -13,15 +17,13 @@ class ProductsViewModel : ViewModel() {
     val products: LiveData<ArrayList<Product>> = _products
 
     fun fetchProducts() {
-        _products.value?.clear()
-        _products.value?.addAll(
-            arrayListOf(
-                Product("Big Burger"),
-                Product("The Big Cheese Burger"),
-                Product("The Big Bacon Burger")
-            )
-        )
-        _products.value = _products.value // for now this is sync
+        viewModelScope.launch(Dispatchers.IO) {
+            ApiInstance.getProducts {
+                _products.value?.clear()
+                _products.value?.addAll(it)
+                _products.postValue(_products.value)
+            }
+        }
     }
 
 }
