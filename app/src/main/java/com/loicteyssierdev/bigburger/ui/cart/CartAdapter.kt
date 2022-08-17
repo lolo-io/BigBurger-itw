@@ -1,34 +1,33 @@
-package com.loicteyssierdev.bigburger.ui.products
+package com.loicteyssierdev.bigburger.ui.cart
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.loicteyssierdev.bigburger.R
-import com.loicteyssierdev.bigburger.databinding.ProductCardBinding
+import com.loicteyssierdev.bigburger.databinding.ProductIncartBinding
 import com.loicteyssierdev.bigburger.model.Product
 import com.loicteyssierdev.bigburger.model.priceInEuro
 
-class ProductsAdapter(private val products: List<Product>, private val inCartProducts: List<Product>, val onClickBuyProduct: (Product) -> Unit) :
-    RecyclerView.Adapter<ProductsAdapter.ItemsViewHolder>() {
+class CartAdapter(private val productsInCart: List<Product>) :
+    RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     companion object {
         const val TAG = "ItemsAdapter"
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         val itemBinding =
-            ProductCardBinding.inflate(
+            ProductIncartBinding.inflate(
                 LayoutInflater.from(parent.context), parent,
                 false
             )
-        return ItemsViewHolder(itemBinding)
+        return CartViewHolder(itemBinding)
     }
 
-    override fun onBindViewHolder(holder: ItemsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         try {
-            products[position].let {
+            productsInCart[position].let {
                 holder.bind(it)
             }
         } catch (e: IndexOutOfBoundsException) {
@@ -37,21 +36,20 @@ class ProductsAdapter(private val products: List<Product>, private val inCartPro
     }
 
     override fun getItemCount(): Int {
-        return products.size
+        return productsInCart.size
     }
 
-    inner class ItemsViewHolder(private val binding: ProductCardBinding) :
+    inner class CartViewHolder(private val binding: ProductIncartBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: Product) {
             binding.title.text = product.title
-            binding.description.text = product.description
             binding.price.text = "${product.priceInEuro}€"
             Glide.with(binding.root.context)
                 .load(product.thumbnail)
                 .into(binding.thumbnail)
 
-            binding.buy.setOnClickListener {
-                onClickBuyProduct(product)
+            binding.root.setOnClickListener {
+               // onClickBuyProduct(product)
             }
         }
     }

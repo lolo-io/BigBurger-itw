@@ -1,41 +1,51 @@
 package com.loicteyssierdev.bigburger.ui.cart
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
-import com.loicteyssierdev.bigburger.R
-import com.loicteyssierdev.bigburger.databinding.FragmentSecondBinding
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.loicteyssierdev.bigburger.databinding.FragmentCartBinding
+import com.loicteyssierdev.bigburger.ui.products.ProductsAdapter
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class CartFragment : Fragment() {
 
-    private var _binding: FragmentSecondBinding? = null
+    private var _binding: FragmentCartBinding? = null
+
+    private val cartViewModel by activityViewModels<CartViewModel>()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
+    private val binding
+        get() = _binding
+            ?: throw IllegalAccessException(
+                "_binding is only valid between " +
+                        "onCreateView and onDestroyView."
+            )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-        _binding = FragmentSecondBinding.inflate(inflater, container, false)
-        return binding.root
+        _binding = FragmentCartBinding.inflate(inflater, container, false)
 
-    }
+        binding.cartRecyclerview.layoutManager = LinearLayoutManager(requireActivity())
+        binding.cartRecyclerview.adapter = CartAdapter(
+            cartViewModel.productsInCart.value
+                ?: arrayListOf(),
+        )
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.buttonSecond.setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+        cartViewModel.productsInCart.observe(viewLifecycleOwner) {
+            binding.cartRecyclerview.adapter?.notifyDataSetChanged()
         }
+
+        return binding.root
     }
 
     override fun onDestroyView() {
