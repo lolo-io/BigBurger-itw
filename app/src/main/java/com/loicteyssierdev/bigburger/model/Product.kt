@@ -1,6 +1,6 @@
 package com.loicteyssierdev.bigburger.model
 
-import java.text.DecimalFormat
+import com.loicteyssierdev.bigburger.util.CurrencyUtils
 
 data class Product(
     val title: String = "",
@@ -11,7 +11,4 @@ data class Product(
 )
 
 val Product.priceInEuro: String
-    get() {
-        val priceInEuro = this.price.toDouble() / 100
-        return DecimalFormat("#.00").format(priceInEuro)
-    }
+    get() = CurrencyUtils.priceInCentsToEuros(this.price)

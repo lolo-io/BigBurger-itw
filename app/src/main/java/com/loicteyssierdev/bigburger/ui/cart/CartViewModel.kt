@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.loicteyssierdev.bigburger.model.Product
+import com.loicteyssierdev.bigburger.util.CurrencyUtils
 
 
 class CartViewModel : ViewModel() {
@@ -19,10 +20,12 @@ class CartViewModel : ViewModel() {
         _productsInCart.value = _productsInCart.value
     }
 
-    fun removeProductFromCart(productKey: Int) {
-
+    fun removeProductFromCart(product: Product) {
+        _productsInCart.value?.remove(product)
     }
 
-    fun getTotalPrice() = productsInCart.value?.sumOf { it.price }
+    fun getTotalPrice() = CurrencyUtils.priceInCentsToEuros(productsInCart.value?.sumOf {
+        it.price
+    } ?: 0)
 
 }

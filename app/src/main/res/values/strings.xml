@@ -5,4 +5,6 @@
     <string name="second_fragment_label">Cart</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="order">Order</string>
+    <string name="loading_the_burgers">Loading the burgers 😋</string>
 </resources>

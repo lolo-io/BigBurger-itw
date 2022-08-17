@@ -9,7 +9,10 @@ import com.loicteyssierdev.bigburger.databinding.ProductIncartBinding
 import com.loicteyssierdev.bigburger.model.Product
 import com.loicteyssierdev.bigburger.model.priceInEuro
 
-class CartAdapter(private val productsInCart: List<Product>) :
+class CartAdapter(
+    private val productsInCart: List<Product>,
+    val onClickRemoveProduct: (Product) -> Unit
+) :
     RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     companion object {
@@ -43,13 +46,13 @@ class CartAdapter(private val productsInCart: List<Product>) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: Product) {
             binding.title.text = product.title
-            binding.price.text = "${product.priceInEuro}€"
+            binding.price.text = product.priceInEuro
             Glide.with(binding.root.context)
                 .load(product.thumbnail)
                 .into(binding.thumbnail)
 
-            binding.root.setOnClickListener {
-               // onClickBuyProduct(product)
+            binding.remove.setOnClickListener {
+                onClickRemoveProduct(product)
             }
         }
     }

@@ -48,10 +48,14 @@ class ProductsFragment : Fragment() {
             onClickBuyProduct(product)
         }
 
-        productViewModel.fetchProducts()
+
 
         productViewModel.products.observe(viewLifecycleOwner) {
             binding.mainRecyclerView.adapter?.notifyDataSetChanged()
+            if(it.isNotEmpty()) {
+                binding.progressBar.visibility = View.GONE
+                binding.textLading.visibility = View.GONE
+            }
         }
 
         binding.fab.setOnClickListener { view ->
@@ -60,11 +64,22 @@ class ProductsFragment : Fragment() {
             )
         }
 
+        productViewModel.fetchProducts()
+
         return binding.root
     }
 
     private fun onClickBuyProduct(product: Product) {
-        cartViewModel.addProductInCart(product)
+        if (cartViewModel.productsInCart.value?.contains(product) == true) {
+            cartViewModel.removeProductFromCart(product)
+        } else {
+            cartViewModel.addProductInCart(product)
+        }
+        binding.mainRecyclerView.adapter?.notifyItemChanged(
+            productViewModel.products.value?.indexOf(
+                product
+            ) ?: 0
+        )
     }
 
     override fun onDestroyView() {
