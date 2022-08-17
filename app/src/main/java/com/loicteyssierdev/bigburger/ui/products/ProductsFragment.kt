@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.loicteyssierdev.bigburger.R
 import com.loicteyssierdev.bigburger.databinding.FragmentProductsBinding
@@ -38,7 +39,7 @@ class ProductsFragment : Fragment() {
 
         _binding = FragmentProductsBinding.inflate(inflater, container, false)
 
-        binding.mainRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        binding.mainRecyclerView.layoutManager = GridLayoutManager(requireActivity(), 2)
         binding.mainRecyclerView.adapter = ProductsAdapter(
             homeViewModel.products.value
                 ?: arrayListOf()

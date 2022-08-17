@@ -4,6 +4,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.loicteyssierdev.bigburger.R
 import com.loicteyssierdev.bigburger.databinding.ProductCardBinding
 import com.loicteyssierdev.bigburger.model.Product
 
@@ -16,7 +18,10 @@ class ProductsAdapter(private val products: List<Product>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsViewHolder {
         val itemBinding =
-            ProductCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ProductCardBinding.inflate(
+                LayoutInflater.from(parent.context), parent,
+                false
+            )
         return ItemsViewHolder(itemBinding)
     }
 
@@ -36,8 +41,14 @@ class ProductsAdapter(private val products: List<Product>) :
 
     inner class ItemsViewHolder(private val binding: ProductCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(post: Product) {
-            binding.title.text = post.title
+        fun bind(product: Product) {
+            binding.title.text = product.title
+            binding.description.text = product.description
+            binding.price.text = "${product.price}€" // TODO divide prices
+            Glide.with(binding.root.context)
+                .load(product.thumbnail)
+                .into(binding.thumbnail)
+             
             //binding.root.setOnClickListener {}
         }
     }
